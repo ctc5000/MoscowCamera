@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "name": "Приложение камера для самоката",
+      "script": "npm",
+      "args": "start",
+      "watch": false
+    }
+  ]
+}

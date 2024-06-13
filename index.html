@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Snapshot</title>
+    <style>
+        .container {
+            display: flex;
+        }
+        .video-container {
+            flex: 1;
+        }
+        .snapshot-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .snapshot-container img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body id="bvideo">
+<h1>Webcam Snapshot</h1>
+<div class="container">
+    <div class="video-container">
+        <h2>Video</h2>
+        <video id="video" autoplay></video>
+    </div>
+    <div class="snapshot-container">
+        <h2>Snapshot Result</h2>
+        <div id="snapshotResult"></div>
+    </div>
+</div>
+
+<script>
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            var video = document.getElementById('video');
+            video.srcObject = stream;
+            var bvideo = document.getElementById('bvideo');
+            bvideo.addEventListener('click', function() {
+                var canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                canvas.toBlob(function(blob) {
+                    var formData = new FormData();
+                    formData.append('snapshot', blob);
+
+                    fetch('http://127.0.0.1:3000/uploadSnapshot', {
+                        method: 'POST',
+                        body: formData
+                    }).then(function(response) {
+                        console.log('Snapshot sent to server');
+                    }).catch(function(error) {
+                        console.error('Error sending snapshot to server:', error);
+                    });
+                }, 'image/png');
+            });
+        })
+        .catch(function(error) {
+            console.error('Error accessing webcam video stream:', error);
+        });
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Stream</title>
+</head>
+<body>
+<h1>Live Video Stream</h1>
+<video id="videoPlayer" controls autoplay></video>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io('http://localhost:3000');
+    const video = document.getElementById('videoPlayer');
+    socket.on('streamStart', (streamPath) => {
+        video.src = `http://localhost:8000${streamPath}/index.m3u8`;
+    });
+    socket.on('streamStop', () => {
+        video.src = '';
+    });
+</script>
+</body>
+</html>

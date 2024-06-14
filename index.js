@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const app = express();
-
+require('dotenv').config()
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json({limit: '10mb', type: 'image/png'}));
@@ -43,7 +43,7 @@ function handleError(err, res) {
         .contentType("text/plain")
         .end('Internal Server Error');
 }
-const PORT = 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 })

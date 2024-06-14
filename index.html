@@ -41,26 +41,35 @@
         .then(function(stream) {
             var video = document.getElementById('video');
             video.srcObject = stream;
-            var bvideo = document.getElementById('bvideo');
-            bvideo.addEventListener('click', function() {
+
+            document.addEventListener('click', function() {
                 var canvas = document.createElement('canvas');
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
                 canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                canvas.toBlob(function(blob) {
-                    var formData = new FormData();
-                    formData.append('snapshot', blob);
+                var snapshotImage = new Image();
+                snapshotImage.src = canvas.toDataURL('image/png');
 
-                    fetch('http://127.0.0.1:3000/uploadSnapshot', {
-                        method: 'POST',
-                        body: formData
-                    }).then(function(response) {
+                var formData = new FormData();
+                formData.append('snapshot', snapshotImage.src);
+
+                fetch('http://127.0.0.1:3001/uploadSnapshot', {
+                    method: 'POST',
+                    body: formData
+                }).then(function(response) {
+                    if (response.ok) {
                         console.log('Snapshot sent to server');
-                    }).catch(function(error) {
-                        console.error('Error sending snapshot to server:', error);
-                    });
-                }, 'image/png');
+                    } else {
+                        console.error('Server responded with an error:', response.status);
+                    }
+                }).catch(function(error) {
+                    console.error('Error sending snapshot to server:', error);
+                });
+
+                var snapshotResult = document.getElementById('snapshotResult');
+                snapshotResult.innerHTML = '';
+                snapshotResult.appendChild(snapshotImage);
             });
         })
         .catch(function(error) {

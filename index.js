@@ -4,42 +4,38 @@ const bodyParser = require('body-parser');
 const multer  = require('multer');
 const fs = require('fs');
 const path = require('path');
-
+const { v4: uuidv4 } = require('uuid');
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use(express.json({limit: '10mb', type: 'image/png'}));
 // Мультипарт парсер для обработки файлов
 const upload = multer({ dest: 'uploads/' });
-
-// Обработка POST запроса на /uploadSnapshot
-app.post('/uploadSnapshot', upload.single('snapshot'), function(req, res) {
-    const tempPath = req.file.path;
-    const targetPath = 'uploads/snapshot_' + Date.now() + '.png';
-
-    if (path.extname(req.file.originalname).toLowerCase() === '.png') {
-        fs.rename(tempPath, targetPath, err => {
-            if (err) return handleError(err, res);
-
-            res
-                .status(200)
-                .header('Access-Control-Allow-Origin', '*') // Разрешаем доступ с любого источника
-                .contentType("text/plain")
-                .end('File uploaded!');
-        });
-    } else {
-        fs.unlink(tempPath, err => {
-            if (err) return handleError(err, res);
-
-            res
-                .status(403)
-                .contentType("text/plain")
-                .end('Only .png files are allowed!');
-        });
-    }
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
+// Обработка POST запроса на /uploadSnapshot
+app.post('/uploadSnapshot', upload.single('snapshot'), (req, res) => {
+    if (!req.body.snapshot) {
+        return handleError('No snapshot data found', res);
+    }
 
+    const timestamp = Date.now();
+    const fileName = `snapshot_${timestamp}_${uuidv4()}.png`;
+    const filePath = path.join(__dirname, 'uploads', 'preview', fileName);
+
+    // Удаление заголовка "data:image/png;base64," перед сохранением
+    const base64Data = req.body.snapshot.replace(/^data:image\/png;base64,/, '');
+
+    fs.writeFile(filePath, base64Data, 'base64', (err) => {
+        if (err) {
+            return handleError(err, res);
+        }
+        console.log('Snapshot saved:', fileName);
+        res.send('Snapshot saved');
+    });
+});
 function handleError(err, res) {
     console.error(err);
     res
@@ -47,7 +43,7 @@ function handleError(err, res) {
         .contentType("text/plain")
         .end('Internal Server Error');
 }
-
-app.listen(3001, function() {
-    console.log('Server is running on port 3001');
-});
+const PORT = 3001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+})

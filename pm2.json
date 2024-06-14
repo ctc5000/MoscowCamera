@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "Сушкин сын самара",
+      "name": "Камера Москвы",
       "script": "npm",
       "args": "start",
       "watch": false

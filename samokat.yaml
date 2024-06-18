@@ -4,7 +4,29 @@ info:
   version: 1.0.0
 servers:
   - url: /
+tags:
+  - name: Настройки
 paths:
+  /api/settings/createbd:
+    get:
+      tags:
+        - Настройки
+      summary: Создать бд
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/settings/updatebd:
+    get:
+      tags:
+        - Настройки
+      summary: Обновить БД
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/photos/uploadSnapshot:
     post:
       tags:

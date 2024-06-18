@@ -23,6 +23,7 @@ async function init() {
     await assertDatabaseConnectionOk();
     app.listen(PORT, () => {
         console.log(`Сервер успешно запущен на порту: ${PORT}. доступ к апи '/api/'.`);
+        console.log(`Сокет Сервер успешно запущен на порту: ${process.env.SOCKET_PORT}`);
     });
 
     //await Settings.SynchBd();

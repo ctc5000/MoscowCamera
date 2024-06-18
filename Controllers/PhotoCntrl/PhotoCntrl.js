@@ -5,8 +5,7 @@ const {v4: uuidv4} = require('uuid');
 require('dotenv').config()
 const multer = require('multer');
 const QRCode = require('qrcode');
-// Мультипарт парсер для обработки файлов
-
+const appSocket = require("../../app");
 
 // Обработка POST запроса на /uploadSnapshot
 async function uploadPhoto(photodata) {
@@ -22,7 +21,6 @@ async function uploadPhoto(photodata) {
         active: true
     });
 
-
     //snapshot 1
     let fileName = `snapshot_${timestamp}_${uuidv4()}.png`;
     let filePath = process.env.PHOTODIR;// path.join('uploads', 'preview', fileName);
@@ -35,7 +33,7 @@ async function uploadPhoto(photodata) {
     });
     await models.photos.create({
         name: fileName,
-        url: process.env.SITEURL+"/img/"+fileName,
+        url: process.env.SITEURL + "/img/" + fileName,
         active: false,
         photogroupId: PhotoGroup.id
     });
@@ -51,7 +49,7 @@ async function uploadPhoto(photodata) {
     });
     await models.photos.create({
         name: fileName,
-        url: process.env.SITEURL+"/img/"+fileName,
+        url: process.env.SITEURL + "/img/" + fileName,
         active: false,
         photogroupId: PhotoGroup.id
     });
@@ -67,16 +65,17 @@ async function uploadPhoto(photodata) {
     });
     await models.photos.create({
         name: fileName,
-        url: process.env.SITEURL+"/img/"+fileName,
+        url: process.env.SITEURL + "/img/" + fileName,
         active: false,
         photogroupId: PhotoGroup.id
     });
+
 
     let address = process.env.SITEURL + 'api/photos/myphoto?groupId=' + PhotoGroup.id;
 
     // Создаем QR-код
     const qrImage = await QRCode.toDataURL(address);
-
+    await appSocket.SS(JSON.stringify({status: "new photos uloaded", photo: PhotoGroup}));
     return qrImage;
 
 }
@@ -150,6 +149,8 @@ async function acceptPhoto(photoId) {
                 id: photoId
             }
     });
+    let Photo = await models.photos.findOne({where:{id:photoId}});
+    await appSocket.SS(JSON.stringify({status: "photo accepted", photo: Photo}));
     return photo;
 }
 

@@ -17,6 +17,9 @@ app.use(express.json({limit: '10mb', type: 'image/png'}));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+const WebSocket = require('ws');
+
+
 const routes = {
     //SALE_LOGIC
     photos: require('./Controllers/PhotoCntrl/PhotoView'),
@@ -141,5 +144,53 @@ console.log("test");
     }
 }
 
+const WSPort = process.env.SOCKET_PORT;
+const wsServer = new WebSocket.Server({port: WSPort});
+wsServer.on('connection', onConnect);
 
+function onConnect(wsClient) {
+    console.log('Новый пользователь');
+    // отправка приветственного сообщения клиенту
+    //wsClient.send('Привет');
+
+    wsClient.on('message', function (data) {
+
+        console.log("+++++++++")
+
+
+        // The server sent you an event
+        var echoEvent = JSON.parse(data);
+        if (echoEvent !== "") {
+            wsSendPing(wsClient);
+            console.log(echoEvent);
+        }
+
+        // Do something based on the event type:
+        if (echoEvent.eventType === 10)
+            console.log('We got an echo: ' + echoEvent.message);
+    });
+
+    wsClient.on('close', function () {
+        // отправка уведомления в консоль
+        console.log('Пользователь отключился');
+    });
+}
+function wsSendPing(wsClient) {
+    console.log('Новый PING');
+    wsClient.send(JSON.stringify({action: 'PING'}));
+}
+async function SocketSend(value) {
+    let count = 0;
+    wsServer.clients.forEach(function each(client) {
+        client.send(value);
+        count++;
+    })
+    console.log(count);
+}
+async function TestLog(value) {
+    console.dir("Test log " + value);
+}
+
+module.exports.log = TestLog;
+module.exports.SS = SocketSend;
 module.exports = app;

@@ -6,8 +6,8 @@ function applyExtraSetup(sequelize) {
 
     } = sequelize.models;
 
-    photogroup.hasMany(photos);
-    photos.belongsTo(photogroup);
+   // photogroup.hasMany(photos);
+   // photos.belongsTo(photogroup);
 
 
 }

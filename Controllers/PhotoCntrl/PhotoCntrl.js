@@ -4,6 +4,7 @@ const path = require('path');
 const {v4: uuidv4} = require('uuid');
 require('dotenv').config()
 const multer = require('multer');
+const QRCode = require('qrcode');
 // Мультипарт парсер для обработки файлов
 
 
@@ -24,7 +25,7 @@ async function uploadPhoto(photodata) {
 
     //snapshot 1
     let fileName = `snapshot_${timestamp}_${uuidv4()}.png`;
-    let filePath = path.join('uploads', 'preview', fileName);
+    let filePath = process.env.PHOTODIR;// path.join('uploads', 'preview', fileName);
     let base64Data = photodata.snapshot.replace(/^data:image\/png;base64,/, '');
 
     await fs.writeFile(filePath, base64Data, 'base64', (err) => {
@@ -34,7 +35,7 @@ async function uploadPhoto(photodata) {
     });
     await models.photos.create({
         name: fileName,
-        url: fileName,
+        url: process.env.SITEURL+"/img/"+fileName,
         active: false,
         photogroupId: PhotoGroup.id
     });
@@ -50,11 +51,11 @@ async function uploadPhoto(photodata) {
     });
     await models.photos.create({
         name: fileName,
-        url: fileName,
+        url: process.env.SITEURL+"/img/"+fileName,
         active: false,
         photogroupId: PhotoGroup.id
     });
-    //snapshot 2
+    //snapshot 3
     fileName = `snapshot_${timestamp}_${uuidv4()}.png`;
     filePath = path.join('uploads', 'preview', fileName);
     base64Data = photodata.snapshot3.replace(/^data:image\/png;base64,/, '');
@@ -66,11 +67,17 @@ async function uploadPhoto(photodata) {
     });
     await models.photos.create({
         name: fileName,
-        url: fileName,
+        url: process.env.SITEURL+"/img/"+fileName,
         active: false,
         photogroupId: PhotoGroup.id
     });
-    return PhotoGroup;
+
+    let address = process.env.SITEURL + 'api/photos/myphoto?groupId=' + PhotoGroup.id;
+
+    // Создаем QR-код
+    const qrImage = await QRCode.toDataURL(address);
+
+    return qrImage;
 
 }
 
@@ -111,11 +118,22 @@ async function getBygroup(groupid) {
         },
         attributes: ['name', 'url', 'id']
     });
-    return photos;
+    if (photos.length != 0) {
+        return {
+            photos: photos,
+            status: "confirmed"
+        };
+    } else {
+        return {
+            photos: photos,
+            status: "unconfirmed"
+        };
+    }
 }
+
 async function setModeratingGroup(groupid) {
 
-    let group = await models.photogroup.update({moderating:true},{
+    let group = await models.photogroup.update({moderating: true}, {
         where:
             {
                 id: groupid
@@ -124,10 +142,22 @@ async function setModeratingGroup(groupid) {
     return group;
 }
 
+async function acceptPhoto(photoId) {
+
+    let photo = await models.photos.update({active: true}, {
+        where:
+            {
+                id: photoId
+            }
+    });
+    return photo;
+}
+
 module.exports = {
     uploadPhoto,
     unconfirmed,
     getConfirmed,
     getBygroup,
     setModeratingGroup,
+    acceptPhoto,
 }

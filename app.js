@@ -98,6 +98,12 @@ console.log("test");
             makeHandlerAwareOfAsyncErrors(routeController.SynchBd)
         );
     }
+  if (routeController.acceptPhoto) {
+        app.post(
+            `/api/${routeName}/acceptphoto`,
+            makeHandlerAwareOfAsyncErrors(routeController.acceptPhoto)
+        );
+    }
 
 
 

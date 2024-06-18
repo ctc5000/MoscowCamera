@@ -4,7 +4,8 @@ const {models} = require("../../sequelize");
 async function uploadPhoto(req,res)
 {
     const Result = await PhotoCntrl.uploadPhoto(req.body);
-    res.json(Result);
+    res.send(`<img src="${Result}" alt="QR Code">`);
+   // res.json(Result);
 }
 async function unconfirmed(req,res)
 {
@@ -26,12 +27,18 @@ async function setModeratingGroup(req,res)
     const Result = await PhotoCntrl.setModeratingGroup(req.body.groupId);
     res.json(Result);
 }
+async function acceptPhoto(req,res)
+{
+    const Result = await PhotoCntrl.acceptPhoto(req.body.photoId);
+    res.json(Result);
+}
 module.exports={
     uploadPhoto,
     unconfirmed,
     getConfirmed,
     getBygroup,
     setModeratingGroup,
+    acceptPhoto,
 }
 
 

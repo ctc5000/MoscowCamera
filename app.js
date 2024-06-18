@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 const routes = {
     //SALE_LOGIC
     photos: require('./Controllers/PhotoCntrl/PhotoView'),
+    settings: require('./Controllers/Settings/SettingView'),
 
 
 };
@@ -82,6 +83,19 @@ console.log("test");
         app.post(
             `/api/${routeName}/confirmgroup`,
             makeHandlerAwareOfAsyncErrors(routeController.setModeratingGroup)
+        );
+    }
+
+  if (routeController.RebuildBd) {
+        app.get(
+            `/api/${routeName}/createbd`,
+            makeHandlerAwareOfAsyncErrors(routeController.RebuildBd)
+        );
+    }
+  if (routeController.SynchBd) {
+        app.get(
+            `/api/${routeName}/updatebd`,
+            makeHandlerAwareOfAsyncErrors(routeController.SynchBd)
         );
     }
 

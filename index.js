@@ -24,8 +24,7 @@ async function init() {
     app.listen(PORT, () => {
         console.log(`Сервер успешно запущен на порту: ${PORT}. доступ к апи '/api/'.`);
     });
-   // await models.photos.sync({force: true, alter: true });
-   // await models.photogroup.sync({force: true, alter: true });
+
     //await Settings.SynchBd();
 }
 

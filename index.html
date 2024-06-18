@@ -5,76 +5,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webcam Snapshot</title>
     <style>
-        .container {
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: #000;
             display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .video-container {
-            flex: 1;
+        #video {
+            width: auto;
+            height: 100vh;
+            object-fit: cover;
+            display: block;
+        }
+        #bvideo {
+            height: 100vh;
+        }
+        #snapshotResult {
+            width: auto;
+            height: 100vh;
+            object-fit: cover;
+            display: block;
+        }
+        .timer {
+            position: absolute;
+            font-size: 70px;
+            font-weight: bold;
+            color: #ffffff;
+            left: 50%;
+            top: 20%;
         }
         .snapshot-container {
-            flex: 1;
-            display: flex;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
             justify-content: center;
             align-items: center;
         }
         .snapshot-container img {
+            width: 100%;
+            height: 100%;
             max-width: 100%;
             max-height: 100%;
         }
     </style>
 </head>
-<body id="bvideo">
-<h1>Webcam Snapshot</h1>
-<div class="container">
-    <div class="video-container">
-        <h2>Video</h2>
-        <video id="video" autoplay></video>
-    </div>
-    <div class="snapshot-container">
-        <h2>Snapshot Result</h2>
-        <div id="snapshotResult"></div>
-    </div>
+<body>
+<video id="video" autoplay></video>
+<div class="snapshot-container" id="snapshotContainer">
+    <div id="snapshotResult"></div>
+    <div class="timer" id="timer"></div>
 </div>
-
 <script>
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(function(stream) {
-            var video = document.getElementById('video');
+    let video = document.getElementById('video');
+    let snapshotContainer = document.getElementById('snapshotContainer');
+    let snapshotResult = document.getElementById('snapshotResult');
+    let timer = document.getElementById('timer');
+    let snapshotImage;
+
+    navigator.mediaDevices.getUserMedia({video: true})
+        .then(function (stream) {
             video.srcObject = stream;
 
-            document.addEventListener('click', function() {
-                var canvas = document.createElement('canvas');
+            document.addEventListener('click', function () {
+                let canvas = document.createElement('canvas');
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
                 canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                var snapshotImage = new Image();
+                snapshotImage = new Image();
                 snapshotImage.src = canvas.toDataURL('image/png');
 
-                var formData = new FormData();
-                formData.append('snapshot', snapshotImage.src);
-
-                fetch('http://127.0.0.1:3001/uploadSnapshot', {
-                    method: 'POST',
-                    body: formData
-                }).then(function(response) {
-                    if (response.ok) {
-                        console.log('Snapshot sent to server');
-                    } else {
-                        console.error('Server responded with an error:', response.status);
-                    }
-                }).catch(function(error) {
-                    console.error('Error sending snapshot to server:', error);
-                });
-
-                var snapshotResult = document.getElementById('snapshotResult');
                 snapshotResult.innerHTML = '';
                 snapshotResult.appendChild(snapshotImage);
+
+                snapshotContainer.style.display = 'flex';
+                video.style.display = 'none';
+
+                let countdown = 5;
+                timer.textContent = countdown;
+                let interval = setInterval(function () {
+                    countdown--;
+                    timer.textContent = countdown;
+                    if (countdown <= 0) {
+                        clearInterval(interval);
+                        snapshotContainer.style.display = 'none';
+                        video.style.display = 'block';
+                        sendSnapshotToServer(snapshotImage);
+                    }
+                }, 1000);
             });
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.error('Error accessing webcam video stream:', error);
         });
+
+    function sendSnapshotToServer(snapshot) {
+        let formData = new FormData();
+        formData.append('snapshot', snapshot.src);
+
+        fetch('http://195.211.124.213:3001/uploadSnapshot', {
+            method: 'POST',
+            body: formData
+        }).then(function (response) {
+            if (response.ok) {
+                console.log('Snapshot sent to server');
+            } else {
+                console.error('Server responded with an error:', response.status);
+            }
+        }).catch(function (error) {
+            console.error('Error sending snapshot to server:', error);
+        });
+    }
 </script>
 </body>
 </html>

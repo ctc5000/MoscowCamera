@@ -9,7 +9,7 @@ const swaggerDocument = YAML.parse(file);
 const cors = require('cors');
 const path = require("path");
 const multer = require("multer");
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({dest: 'uploads/'});
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -24,6 +24,7 @@ const routes = {
     //SALE_LOGIC
     photos: require('./Controllers/PhotoCntrl/PhotoView'),
     settings: require('./Controllers/Settings/SettingView'),
+    promocodes: require('./Controllers/Promocodes/PromoCodesView'),
 
 
 };
@@ -57,7 +58,7 @@ app.get('/', (req, res) => {
 
 
 for (const [routeName, routeController] of Object.entries(routes)) {
-console.log("test");
+    console.log("test");
 
     if (routeController.uploadPhoto, upload.single('snapshot')) {
         app.post(
@@ -65,50 +66,68 @@ console.log("test");
             makeHandlerAwareOfAsyncErrors(routeController.uploadPhoto)
         );
     }
-  if (routeController.unconfirmed) {
+    if (routeController.unconfirmed) {
         app.get(
             `/api/${routeName}/unconfirmed`,
             makeHandlerAwareOfAsyncErrors(routeController.unconfirmed)
         );
-    }if (routeController.getConfirmed) {
+    }
+    if (routeController.getConfirmed) {
         app.get(
             `/api/${routeName}/slideshow`,
             makeHandlerAwareOfAsyncErrors(routeController.getConfirmed)
         );
     }
-  if (routeController.getConfirmed) {
+    if (routeController.getConfirmed) {
         app.get(
             `/api/${routeName}/myphoto`,
             makeHandlerAwareOfAsyncErrors(routeController.getBygroup)
         );
     }
-  if (routeController.setModeratingGroup) {
+    if (routeController.setModeratingGroup) {
         app.post(
             `/api/${routeName}/confirmgroup`,
             makeHandlerAwareOfAsyncErrors(routeController.setModeratingGroup)
         );
     }
 
-  if (routeController.RebuildBd) {
+    if (routeController.RebuildBd) {
         app.get(
             `/api/${routeName}/createbd`,
             makeHandlerAwareOfAsyncErrors(routeController.RebuildBd)
         );
     }
-  if (routeController.SynchBd) {
+    if (routeController.SynchBd) {
         app.get(
             `/api/${routeName}/updatebd`,
             makeHandlerAwareOfAsyncErrors(routeController.SynchBd)
         );
     }
-  if (routeController.acceptPhoto) {
+    if (routeController.acceptPhoto) {
         app.post(
             `/api/${routeName}/acceptphoto`,
             makeHandlerAwareOfAsyncErrors(routeController.acceptPhoto)
         );
     }
+    if (routeController.loadFromCsv) {
+        app.get(
+            `/api/${routeName}/loadpromo`,
+            makeHandlerAwareOfAsyncErrors(routeController.loadFromCsv)
+        );
+    }
+    if (routeController.grantOneCode) {
+        app.get(
+            `/api/${routeName}/getcode`,
+            makeHandlerAwareOfAsyncErrors(routeController.grantOneCode)
+        );
+    }
 
-
+    if (routeController.getPromoById) {
+        app.get(
+            `/api/${routeName}/getmycode`,
+            makeHandlerAwareOfAsyncErrors(routeController.getPromoById)
+        );
+    }
 
 
 //Базовые методы
@@ -175,10 +194,12 @@ function onConnect(wsClient) {
         console.log('Пользователь отключился');
     });
 }
+
 function wsSendPing(wsClient) {
     console.log('Новый PING');
     wsClient.send(JSON.stringify({action: 'PING'}));
 }
+
 async function SocketSend(value) {
     let count = 0;
     wsServer.clients.forEach(function each(client) {
@@ -187,6 +208,7 @@ async function SocketSend(value) {
     })
     console.log(count);
 }
+
 async function TestLog(value) {
     console.dir("Test log " + value);
 }

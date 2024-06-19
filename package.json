@@ -37,6 +37,8 @@
     "dependencies": {
         "@sequelize/postgres": "^7.0.0-alpha.41",
         "body-parser": "^1.20.2",
+        "csv-parser": "^3.0.0",
+        "csv-reader": "^1.0.12",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "fs": "^0.0.1-security",

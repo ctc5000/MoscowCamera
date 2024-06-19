@@ -8,6 +8,7 @@ tags:
   - name: Настройки
   - name: Администратор
   - name: Пользователь
+  - name: Промокоды
 paths:
   /api/settings/createbd:
     get:
@@ -122,6 +123,42 @@ paths:
               type: object
               example:
                 photoId: 1
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/promocodes/loadpromo:
+    get:
+      tags:
+        - Промокоды
+      summary: Загрузить промокоды из цсв
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/promocodes/getcode:
+    get:
+      tags:
+        - Промокоды
+      summary: Получить промокод
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/promocodes/getmycode:
+    get:
+      tags:
+        - Промокоды
+      summary: Получить  промокод по айди
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '1'
       responses:
         '200':
           description: Successful response

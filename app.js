@@ -128,6 +128,19 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.getPromoById)
         );
     }
+    if (routeController.grantOneMskCode) {
+        app.get(
+            `/api/${routeName}/getcodemsk`,
+            makeHandlerAwareOfAsyncErrors(routeController.grantOneMskCode)
+        );
+    }
+
+    if (routeController.getPromoMskById) {
+        app.get(
+            `/api/${routeName}/getmycodemsk`,
+            makeHandlerAwareOfAsyncErrors(routeController.getPromoMskById)
+        );
+    }
 
 
 //Базовые методы

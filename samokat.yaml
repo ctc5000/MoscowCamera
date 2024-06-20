@@ -164,3 +164,29 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/promocodes/getcodemsk:
+    get:
+      tags:
+        - Промокоды
+      summary: Москва получить промокод
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/promocodes/getmycodemsk:
+    get:
+      tags:
+        - Промокоды
+      summary: Москва получить промокод по айди
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

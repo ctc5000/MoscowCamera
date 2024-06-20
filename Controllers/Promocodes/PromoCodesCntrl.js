@@ -7,6 +7,8 @@ const CsvReadableStream = require('csv-reader');
 async function loadFromCsv() {
     await models.promocode.sync({force: true, alter: true});
     await models.promocode.sync({force: false, alter: true});
+    await models.promocodemsk.sync({force: true, alter: true});
+    await models.promocodemsk.sync({force: false, alter: true});
     let inputStream = fs.createReadStream('promocodes.csv', 'utf8');
     let ArData = [];
     await inputStream
@@ -21,8 +23,11 @@ async function loadFromCsv() {
         })
         .on('end', async function () {
             for (let i = 0; i < ArData.length; i++) {
-
-                let promo = await models.promocode.create({value: ArData[i].value});
+                if (i <= 10000) {
+                    let promo = await models.promocode.create({value: ArData[i].value});
+                } else {
+                    let promo = await models.promocodemsk.create({value: ArData[i].value});
+                }
             }
         });
     return true;
@@ -32,7 +37,7 @@ async function grantOneCode() {
 
     let promo = await models.promocode.findOne({
         where: {activated: false}
-        , attributes: [ 'id','value',]
+        , attributes: ['id', 'value',]
     });
     await models.promocode.update({
             activated: true,
@@ -40,18 +45,43 @@ async function grantOneCode() {
     )
     return promo;
 }
+async function grantOneMskCode() {
+
+    let promo = await models.promocodemsk.findOne({
+        where: {activated: false}
+        , attributes: ['id', 'value',]
+    });
+    await models.promocode.update({
+            activated: true,
+        }, {where: {id: promo.id}}
+    )
+    return promo;
+}
+
 async function getPromoById(id) {
 
-    let promo = await models.promocode.findOne({
+    let promo = await models.promocodemsk.findOne({
         where: {id: id}
-        , attributes: [ 'id','value',]
+        , attributes: ['id', 'value',]
     });
 
     return promo;
 }
+async function getPromoMskById(id) {
+
+    let promo = await models.promocodemsk.findOne({
+        where: {id: id}
+        , attributes: ['id', 'value',]
+    });
+
+    return promo;
+}
+
 module.exports = {
     loadFromCsv,
     grantOneCode,
     getPromoById,
+    getPromoMskById,
+    grantOneMskCode,
 
 }

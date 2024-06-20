@@ -16,10 +16,22 @@ async function getPromoById(req,res)
     const Result = await PromocodesCntrl.getPromoById(req.query.id);
     res.json(Result);
 }
+async function grantOneMskCode(req,res)
+{
+    const Result = await PromocodesCntrl.grantOneMskCode();
+    res.json(Result);
+}
+async function getPromoMskById(req,res)
+{
+    const Result = await PromocodesCntrl.getPromoMskById(req.query.id);
+    res.json(Result);
+}
 module.exports={
     loadFromCsv,
     grantOneCode,
     getPromoById,
+    getPromoMskById,
+    grantOneMskCode,
 
 }
 

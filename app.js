@@ -54,7 +54,7 @@ var upload = multer({dest: 'uploads/'})
 //app.use(upload.array());
 app.post('/api/upload', upload.single('photo'), async function (req, res, next) {
     let timestamp = Date.now();
-    let filename = 'uploads/preview/' +"yqndexgo_"+timestamp+ req.file.originalname;
+    let filename = 'uploads/preview/' +"yqndexgo_"+timestamp;
 
     fs.rename(req.file.path, filename  , function (err) {
         if (err) throw err;

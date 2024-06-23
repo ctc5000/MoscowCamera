@@ -18,6 +18,7 @@ const modelDefiners = [
     require('../Models/Photo/PhotoGroup.model'),
     require('../Models/PromoCodes/PromoCodes.model'),
     require('../Models/PromoCodes/PromoCodesMsk.model'),
+    require('../Models/Users/users.model'),
 
 
 

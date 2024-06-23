@@ -9,6 +9,7 @@ tags:
   - name: Администратор
   - name: Пользователь
   - name: Промокоды
+  - name: Пользователи
 paths:
   /api/settings/createbd:
     get:
@@ -185,6 +186,60 @@ paths:
           schema:
             type: integer
           example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/users/auth:
+    post:
+      tags:
+        - Пользователи
+      summary: Авторизоваться
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                login: admin
+                password: '123456'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/users/create:
+    post:
+      tags:
+        - Пользователи
+      summary: Создать пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                login: admin
+                password: '123456'
+                name: Manager
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/users/drop:
+    post:
+      tags:
+        - Пользователи
+      summary: Удалить пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: 1
       responses:
         '200':
           description: Successful response

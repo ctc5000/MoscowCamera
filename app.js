@@ -25,6 +25,7 @@ const routes = {
     photos: require('./Controllers/PhotoCntrl/PhotoView'),
     settings: require('./Controllers/Settings/SettingView'),
     promocodes: require('./Controllers/Promocodes/PromoCodesView'),
+    users: require('./Controllers/Users/UsersView'),
 
 
 };
@@ -139,6 +140,24 @@ for (const [routeName, routeController] of Object.entries(routes)) {
         app.get(
             `/api/${routeName}/getmycodemsk`,
             makeHandlerAwareOfAsyncErrors(routeController.getPromoMskById)
+        );
+    }
+    if (routeController.auth) {
+        app.post(
+            `/api/${routeName}/auth`,
+            makeHandlerAwareOfAsyncErrors(routeController.auth)
+        );
+    }
+    if (routeController.createUser) {
+        app.post(
+            `/api/${routeName}/create`,
+            makeHandlerAwareOfAsyncErrors(routeController.createUser)
+        );
+    }
+    if (routeController.dropuser) {
+        app.post(
+            `/api/${routeName}/drop`,
+            makeHandlerAwareOfAsyncErrors(routeController.dropuser)
         );
     }
 

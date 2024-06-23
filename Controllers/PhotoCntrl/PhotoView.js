@@ -4,8 +4,8 @@ const {models} = require("../../sequelize");
 async function uploadPhoto(req,res)
 {
     const Result = await PhotoCntrl.uploadPhoto(req.body);
-    res.send(`<img src="${Result}" alt="QR Code">`);
-   // res.json(Result);
+    //res.send(`<img src="${Result}" alt="QR Code">`);
+    res.send(Result);
 }
 async function unconfirmed(req,res)
 {

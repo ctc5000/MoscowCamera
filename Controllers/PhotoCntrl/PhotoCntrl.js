@@ -23,9 +23,9 @@ async function uploadPhoto(photodata) {
     });
 
     //snapshot 1
-    let fileName = `snapshot_${timestamp}_${uuidv4()}.png`;
-    let filePath = process.env.PHOTODIR;// path.join('uploads', 'preview', fileName);
-    let base64Data = photodata.snapshot.replace(/^data:image\/png;base64,/, '');
+    let fileName = `yandexgo_${timestamp}_${uuidv4()}p1.png`;
+    let filePath = path.join('uploads', 'preview', fileName);
+    let base64Data = photodata.snapshot2.replace(/^data:image\/png;base64,/, '');
 
     await fs.writeFile(filePath, base64Data, 'base64', (err) => {
         if (err) {
@@ -39,7 +39,7 @@ async function uploadPhoto(photodata) {
         photogroupId: PhotoGroup.id
     });
     //snapshot 2
-    fileName = `snapshot_${timestamp}_${uuidv4()}.png`;
+    fileName = `yandexgo_${timestamp}_${uuidv4()}p2.png`;
     filePath = path.join('uploads', 'preview', fileName);
     base64Data = photodata.snapshot2.replace(/^data:image\/png;base64,/, '');
 
@@ -55,7 +55,7 @@ async function uploadPhoto(photodata) {
         photogroupId: PhotoGroup.id
     });
     //snapshot 3
-    fileName = `snapshot_${timestamp}_${uuidv4()}.png`;
+    fileName = `yandexgo_${timestamp}_${uuidv4()}p3.png`;
     filePath = path.join('uploads', 'preview', fileName);
     base64Data = photodata.snapshot3.replace(/^data:image\/png;base64,/, '');
 
@@ -98,7 +98,7 @@ async function getConfirmed() {
         where:
             {
                 active: true,
-                rejected:false
+                rejected: false
             },
         attributes: ['name', 'url']
     });
@@ -168,7 +168,7 @@ async function rejectGroup(groupid) {
 async function deleteGroup(groupid) {
 
     try {
-        let group = await models.photogroup.destroy( {
+        let group = await models.photogroup.destroy({
             where:
                 {
                     id: groupid

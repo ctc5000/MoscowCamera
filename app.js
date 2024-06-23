@@ -9,7 +9,7 @@ const swaggerDocument = YAML.parse(file);
 const cors = require('cors');
 const path = require("path");
 const multer = require("multer");
-const upload = multer({dest: 'uploads/'});
+const upload = multer({dest: 'uploads/',limits: { fileSize: 1000 * 1024 * 1024 }});
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());

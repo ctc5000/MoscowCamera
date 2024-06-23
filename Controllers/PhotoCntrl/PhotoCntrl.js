@@ -22,9 +22,9 @@ async function CreatePhotoGroup()
     return PhotoGroup;
 }
 
-async function uploadPhoto(photodata) {
+async function uploadPhoto(fileName,groupId) {
 
-    let timestamp = Date.now();
+   /* let timestamp = Date.now();
     if (!photodata.snapshot) {
         return handleError('No snapshot data found', res);
     }
@@ -38,19 +38,19 @@ async function uploadPhoto(photodata) {
         if (err) {
             return err;
         }
-    });
+    });*/
     await models.photos.create({
         name: fileName,
         url: process.env.SITEURL + "/img/" + fileName,
         active: false,
-        photogroupId: photodata.groupId
+        photogroupId: groupId
     });
 
-    let address = process.env.SITEURL + 'api/photos/myphoto?groupId=' + photodata.groupId;
+    let address = process.env.SITEURL + 'api/photos/myphoto?groupId=' + groupId;
 
     // Создаем QR-код
     const qrImage = await QRCode.toDataURL(address);
-    await appSocket.SS(JSON.stringify({status: "new photos uploaded", photo: photodata.groupId}));
+    await appSocket.SS(JSON.stringify({status: "new photos uploaded", photo: groupId}));
     return qrImage;
 
 }

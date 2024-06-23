@@ -18,7 +18,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 const WebSocket = require('ws');
-
+const  PhotoCntrl = require ("./Controllers/PhotoCntrl/PhotoCntrl")
 
 const routes = {
     //SALE_LOGIC
@@ -52,13 +52,19 @@ app.get('/', (req, res) => {
 var multer = require('multer')
 var upload = multer({dest: 'uploads/'})
 //app.use(upload.array());
-app.post('/api/upload', upload.single('photo'), function (req, res, next) {
-    fs.rename(req.file.path, 'uploads/preview/' + req.file.originalname, function (err) {
+app.post('/api/upload', upload.single('photo'), async function (req, res, next) {
+    let timestamp = Date.now();
+    let filename = 'uploads/preview/' +"yqndexgo_"+timestamp+ req.file.originalname;
+
+    fs.rename(req.file.path, filename  , function (err) {
         if (err) throw err;
         console.log('renamed complete');
     });
     console.log("Upload complite");
-    res.json({path: 'uploads/' + req.file.originalname});
+    let data = await PhotoCntrl.uploadPhoto(filename,req.query.groupId);
+    res.send(data);
+   // res.json({path: 'uploads/' + req.file.originalname});
+
 })
 
 

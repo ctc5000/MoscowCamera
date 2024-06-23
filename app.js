@@ -53,7 +53,7 @@ var multer = require('multer')
 var upload = multer({dest: 'uploads/'})
 //app.use(upload.array());
 app.post('/api/upload', upload.single('photo'), function (req, res, next) {
-    fs.rename(req.file.path, 'uploads/preview' + req.file.originalname, function (err) {
+    fs.rename(req.file.path, 'uploads/preview/' + req.file.originalname, function (err) {
         if (err) throw err;
         console.log('renamed complete');
     });

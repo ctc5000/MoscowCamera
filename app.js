@@ -13,7 +13,7 @@ const upload = multer({dest: 'uploads/'});
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.json({limit: '10mb', type: 'image/png'}));
+app.use(express.json({limit: '1000mb', type: 'image/png'}));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));

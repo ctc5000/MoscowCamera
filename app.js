@@ -62,7 +62,7 @@ app.post('/api/upload', upload.single('photo'), async function (req, res, next) 
         console.log('renamed complete');
     });
     console.log("Upload complite");
-    let data = await PhotoCntrl.uploadPhoto(originalName,req.query.groupId);
+    let data = await PhotoCntrl.uploadPhoto(originalName,req.body.groupId);
     res.send(data);
    // res.json({path: 'uploads/' + req.file.originalname});
 

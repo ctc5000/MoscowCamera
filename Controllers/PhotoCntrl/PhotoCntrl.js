@@ -41,7 +41,7 @@ async function uploadPhoto(fileName,groupId) {
     });*/
 
     //http://msksamapi.ru//img/uploads/preview/yqndexgo_1719178910696.jpg
-
+console.log(groupId);
     await models.photos.create({
         name: fileName,
         url: process.env.SITEURL + "img/" + fileName,

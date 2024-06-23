@@ -75,7 +75,7 @@ async function uploadPhoto(photodata) {
 
     // Создаем QR-код
     const qrImage = await QRCode.toDataURL(address);
-    await appSocket.SS(JSON.stringify({status: "new photos uloaded", photo: PhotoGroup}));
+    await appSocket.SS(JSON.stringify({status: "new photos uploaded", photo: PhotoGroup}));
     return qrImage;
 
 }
@@ -138,6 +138,7 @@ async function setModeratingGroup(groupid) {
                 id: groupid
             }
     });
+    await appSocket.SS(JSON.stringify({status: "group comfirmed", group: groupid}));
     return group;
 }
 

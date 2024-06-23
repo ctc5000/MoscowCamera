@@ -8,13 +8,12 @@ const file = fs.readFileSync('./samokat.yaml', 'utf8');
 const swaggerDocument = YAML.parse(file);
 const cors = require('cors');
 const path = require("path");
-const multer = require("multer");
-const upload = multer({dest: 'uploads/',limits: { fileSize: 1000 * 1024 * 1024 }});
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json({limit: '1000mb', type: 'image/png'}));
-app.use(express.urlencoded({ extended: true, limit: '1000mb' }));
+app.use(express.urlencoded({extended: true}));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -30,7 +29,7 @@ const routes = {
 
 
 };
-app.use(upload.array());
+
 
 // We create a wrapper to workaround async errors not being transmitted correctly.
 function makeHandlerAwareOfAsyncErrors(handler) {
@@ -50,24 +49,27 @@ app.get('/', (req, res) => {
 });
 
 
-/*app.get('/', (req, res) => {
-    res.send(`
-		<h2>Hello, Sequelize + Express!</h2>
-		<p>Make sure you have executed <b>npm run setup-example-db</b> once to have a populated example database. Otherwise, you will get <i>'no such table'</i> errors.</p>
-		<p>Try some routes, such as <a href='/api/test'>/api/test</a> or <a href='/api/orchestras?includeInstruments'>/api/orchestras?includeInstruments</a>!</p>
-	`);
-});*/
+var multer = require('multer')
+var upload = multer({dest: 'uploads/'})
+//app.use(upload.array());
+app.post('/api/upload', upload.single('photo'), function (req, res, next) {
+    fs.rename(req.file.path, 'uploads/preview' + req.file.originalname, function (err) {
+        if (err) throw err;
+        console.log('renamed complete');
+    });
+    console.log("Upload complite");
+    res.json({path: 'uploads/' + req.file.originalname});
+})
 
 
 for (const [routeName, routeController] of Object.entries(routes)) {
-    console.log("test");
 
-    if (routeController.uploadPhoto, upload.single('snapshot')) {
-        app.post(
-            `/api/${routeName}/uploadSnapshot`,
-            makeHandlerAwareOfAsyncErrors(routeController.uploadPhoto)
-        );
-    }
+    /*   if (routeController.uploadPhoto, upload.single('snapshot')) {
+           app.post(
+               `/api/${routeName}/uploadSnapshot`,
+               makeHandlerAwareOfAsyncErrors(routeController.uploadPhoto)
+           );
+       }*/
     if (routeController.CreatePhotoGroup) {
         app.post(
             `/api/${routeName}/creategroup`,

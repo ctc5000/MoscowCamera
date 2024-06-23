@@ -158,6 +158,28 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/upload:
+    post:
+      tags:
+        - Пользователь
+      summary: Загрузить фото новый метод
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+                groupId:
+                  type: integer
+                  example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/promocodes/loadpromo:
     get:
       tags:

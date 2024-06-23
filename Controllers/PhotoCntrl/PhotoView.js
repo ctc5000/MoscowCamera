@@ -27,11 +27,17 @@ async function setModeratingGroup(req,res)
     const Result = await PhotoCntrl.setModeratingGroup(req.body.groupId);
     res.json(Result);
 }
+async function rejectGroup(req,res)
+{
+    const Result = await PhotoCntrl.rejectGroup(req.body.groupId);
+    res.json(Result);
+}
 async function acceptPhoto(req,res)
 {
     const Result = await PhotoCntrl.acceptPhoto(req.body.photoId);
     res.json(Result);
 }
+
 module.exports={
     uploadPhoto,
     unconfirmed,
@@ -39,6 +45,7 @@ module.exports={
     getBygroup,
     setModeratingGroup,
     acceptPhoto,
+    rejectGroup,
 }
 
 

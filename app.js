@@ -91,6 +91,12 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.setModeratingGroup)
         );
     }
+    if (routeController.rejectGroup) {
+        app.post(
+            `/api/${routeName}/reject`,
+            makeHandlerAwareOfAsyncErrors(routeController.rejectGroup)
+        );
+    }
 
     if (routeController.RebuildBd) {
         app.get(

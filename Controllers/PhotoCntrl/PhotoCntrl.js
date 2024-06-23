@@ -131,15 +131,36 @@ async function getBygroup(groupid) {
 }
 
 async function setModeratingGroup(groupid) {
+    try {
+        let group = await models.photogroup.update({moderating: true}, {
+            where:
+                {
+                    id: groupid
+                }
+        });
+        await appSocket.SS(JSON.stringify({status: "group comfirmed", group: groupid}));
+        return group;
+    } catch (e) {
+        return false
+    }
 
-    let group = await models.photogroup.update({moderating: true}, {
-        where:
-            {
-                id: groupid
-            }
-    });
-    await appSocket.SS(JSON.stringify({status: "group comfirmed", group: groupid}));
-    return group;
+}
+
+async function rejectGroup(groupid) {
+
+    try {
+        let group = await models.photogroup.update({rejected: true}, {
+            where:
+                {
+                    id: groupid
+                }
+        });
+        await appSocket.SS(JSON.stringify({status: "group rejected", group: groupid}));
+        return group;
+    } catch (e) {
+        return false
+    }
+
 }
 
 async function acceptPhoto(photoId) {
@@ -150,10 +171,11 @@ async function acceptPhoto(photoId) {
                 id: photoId
             }
     });
-    let Photo = await models.photos.findOne({where:{id:photoId}});
+    let Photo = await models.photos.findOne({where: {id: photoId}});
     await appSocket.SS(JSON.stringify({status: "photo accepted", photo: Photo}));
     return photo;
 }
+
 
 module.exports = {
     uploadPhoto,
@@ -162,4 +184,5 @@ module.exports = {
     getBygroup,
     setModeratingGroup,
     acceptPhoto,
+    rejectGroup,
 }

@@ -53,6 +53,10 @@ var multer = require('multer')
 var upload = multer({dest: 'uploads/'})
 //app.use(upload.array());
 app.post('/api/upload', upload.single('photo'), async function (req, res, next) {
+
+  try {
+
+
     let timestamp = Date.now();
     let  originalName= "yqndexgo_"+timestamp+".jpg";
     let filename = 'uploads/preview/' +originalName;
@@ -67,6 +71,10 @@ app.post('/api/upload', upload.single('photo'), async function (req, res, next) 
     let data = await PhotoCntrl.uploadPhoto(originalName,req.body.groupId);
     res.send(data);
    // res.json({path: 'uploads/' + req.file.originalname});
+  }catch (e) {
+      console.log(e)
+      res.send(e)
+  }
 
 })
 

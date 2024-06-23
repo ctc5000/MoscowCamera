@@ -57,6 +57,8 @@ app.post('/api/upload', upload.single('photo'), async function (req, res, next) 
     let  originalName= "yqndexgo_"+timestamp+".jpg";
     let filename = 'uploads/preview/' +originalName;
 
+    console.log(req.file);
+
     fs.rename(req.file.path, filename  , function (err) {
         if (err) throw err;
         console.log('renamed complete');

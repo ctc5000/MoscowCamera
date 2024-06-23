@@ -68,6 +68,12 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.uploadPhoto)
         );
     }
+    if (routeController.CreatePhotoGroup) {
+        app.post(
+            `/api/${routeName}/creategroup`,
+            makeHandlerAwareOfAsyncErrors(routeController.CreatePhotoGroup)
+        );
+    }
     if (routeController.unconfirmed) {
         app.get(
             `/api/${routeName}/unconfirmed`,

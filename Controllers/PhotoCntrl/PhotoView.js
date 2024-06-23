@@ -1,6 +1,12 @@
 const PhotoCntrl = require("./PhotoCntrl");
 const {models} = require("../../sequelize");
 
+async function CreatePhotoGroup(req,res)
+{
+    const Result = await PhotoCntrl.CreatePhotoGroup();
+    //res.send(`<img src="${Result}" alt="QR Code">`);
+    res.send(Result);
+}
 async function uploadPhoto(req,res)
 {
     const Result = await PhotoCntrl.uploadPhoto(req.body);
@@ -52,6 +58,7 @@ module.exports={
     acceptPhoto,
     rejectGroup,
     deleteGroup,
+    CreatePhotoGroup,
 }
 
 

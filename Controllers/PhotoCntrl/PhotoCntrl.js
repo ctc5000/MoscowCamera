@@ -8,24 +8,32 @@ const QRCode = require('qrcode');
 const appSocket = require("../../app");
 
 // Обработка POST запроса на /uploadSnapshot
-async function uploadPhoto(photodata) {
 
+
+
+async function CreatePhotoGroup()
+{
     let timestamp = Date.now();
-    if (!photodata.snapshot && !photodata.snapshot2 && !photodata.snapshot3) {
-        return handleError('No snapshot data found', res);
-    }
-
     let PhotoGroup = await models.photogroup.create({
         name: timestamp,
         moderating: false,
         active: true,
         rejected: false
     });
+    return PhotoGroup;
+}
+
+async function uploadPhoto(photodata) {
+
+    let timestamp = Date.now();
+    if (!photodata.snapshot) {
+        return handleError('No snapshot data found', res);
+    }
 
     //snapshot 1
     let fileName = `yandexgo_${timestamp}_${uuidv4()}p1.png`;
     let filePath = path.join('uploads', 'preview', fileName);
-    let base64Data = photodata.snapshot2.replace(/^data:image\/png;base64,/, '');
+    let base64Data = photodata.snapshot.replace(/^data:image\/png;base64,/, '');
 
     await fs.writeFile(filePath, base64Data, 'base64', (err) => {
         if (err) {
@@ -36,47 +44,14 @@ async function uploadPhoto(photodata) {
         name: fileName,
         url: process.env.SITEURL + "/img/" + fileName,
         active: false,
-        photogroupId: PhotoGroup.id
-    });
-    //snapshot 2
-    fileName = `yandexgo_${timestamp}_${uuidv4()}p2.png`;
-    filePath = path.join('uploads', 'preview', fileName);
-    base64Data = photodata.snapshot2.replace(/^data:image\/png;base64,/, '');
-
-    await fs.writeFile(filePath, base64Data, 'base64', (err) => {
-        if (err) {
-            return err;
-        }
-    });
-    await models.photos.create({
-        name: fileName,
-        url: process.env.SITEURL + "/img/" + fileName,
-        active: false,
-        photogroupId: PhotoGroup.id
-    });
-    //snapshot 3
-    fileName = `yandexgo_${timestamp}_${uuidv4()}p3.png`;
-    filePath = path.join('uploads', 'preview', fileName);
-    base64Data = photodata.snapshot3.replace(/^data:image\/png;base64,/, '');
-
-    await fs.writeFile(filePath, base64Data, 'base64', (err) => {
-        if (err) {
-            return err;
-        }
-    });
-    await models.photos.create({
-        name: fileName,
-        url: process.env.SITEURL + "/img/" + fileName,
-        active: false,
-        photogroupId: PhotoGroup.id
+        photogroupId: photodata.groupId
     });
 
-
-    let address = process.env.SITEURL + 'api/photos/myphoto?groupId=' + PhotoGroup.id;
+    let address = process.env.SITEURL + 'api/photos/myphoto?groupId=' + photodata.groupId;
 
     // Создаем QR-код
     const qrImage = await QRCode.toDataURL(address);
-    await appSocket.SS(JSON.stringify({status: "new photos uploaded", photo: PhotoGroup}));
+    await appSocket.SS(JSON.stringify({status: "new photos uploaded", photo: photodata.groupId}));
     return qrImage;
 
 }
@@ -205,4 +180,5 @@ module.exports = {
     acceptPhoto,
     rejectGroup,
     deleteGroup,
+    CreatePhotoGroup,
 }

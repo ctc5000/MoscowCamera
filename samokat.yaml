@@ -85,6 +85,23 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/photos/delete:
+    post:
+      tags:
+        - Администратор
+      summary: Удалить группу фото
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                groupId: 1
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/photos/uploadSnapshot:
     post:
       tags:

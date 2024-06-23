@@ -97,6 +97,12 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.rejectGroup)
         );
     }
+    if (routeController.deleteGroup) {
+        app.post(
+            `/api/${routeName}/delete`,
+            makeHandlerAwareOfAsyncErrors(routeController.deleteGroup)
+        );
+    }
 
     if (routeController.RebuildBd) {
         app.get(

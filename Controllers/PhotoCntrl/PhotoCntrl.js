@@ -18,7 +18,8 @@ async function uploadPhoto(photodata) {
     let PhotoGroup = await models.photogroup.create({
         name: timestamp,
         moderating: false,
-        active: true
+        active: true,
+        rejected: false
     });
 
     //snapshot 1
@@ -96,7 +97,8 @@ async function getConfirmed() {
     let photos = await models.photos.findAll({
         where:
             {
-                active: true
+                active: true,
+                rejected:false
             },
         attributes: ['name', 'url']
     });
@@ -163,6 +165,23 @@ async function rejectGroup(groupid) {
 
 }
 
+async function deleteGroup(groupid) {
+
+    try {
+        let group = await models.photogroup.destroy( {
+            where:
+                {
+                    id: groupid
+                }
+        });
+        await appSocket.SS(JSON.stringify({status: "group destroyed", group: groupid}));
+        return true;
+    } catch (e) {
+        return false
+    }
+
+}
+
 async function acceptPhoto(photoId) {
 
     let photo = await models.photos.update({active: true}, {
@@ -185,4 +204,5 @@ module.exports = {
     setModeratingGroup,
     acceptPhoto,
     rejectGroup,
+    deleteGroup,
 }

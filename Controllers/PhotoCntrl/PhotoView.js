@@ -37,6 +37,11 @@ async function acceptPhoto(req,res)
     const Result = await PhotoCntrl.acceptPhoto(req.body.photoId);
     res.json(Result);
 }
+async function deleteGroup(req,res)
+{
+    const Result = await PhotoCntrl.deleteGroup(req.body.groupId);
+    res.json(Result);
+}
 
 module.exports={
     uploadPhoto,
@@ -46,6 +51,7 @@ module.exports={
     setModeratingGroup,
     acceptPhoto,
     rejectGroup,
+    deleteGroup,
 }
 
 

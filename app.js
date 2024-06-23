@@ -54,14 +54,15 @@ var upload = multer({dest: 'uploads/'})
 //app.use(upload.array());
 app.post('/api/upload', upload.single('photo'), async function (req, res, next) {
     let timestamp = Date.now();
-    let filename = 'uploads/preview/' +"yqndexgo_"+timestamp+".jpg";
+    let  originalName= "yqndexgo_"+timestamp+".jpg";
+    let filename = 'uploads/preview/' +originalName;
 
     fs.rename(req.file.path, filename  , function (err) {
         if (err) throw err;
         console.log('renamed complete');
     });
     console.log("Upload complite");
-    let data = await PhotoCntrl.uploadPhoto(filename,req.query.groupId);
+    let data = await PhotoCntrl.uploadPhoto(originalName,req.query.groupId);
     res.send(data);
    // res.json({path: 'uploads/' + req.file.originalname});
 

@@ -39,9 +39,12 @@ async function uploadPhoto(fileName,groupId) {
             return err;
         }
     });*/
+
+    //http://msksamapi.ru//img/uploads/preview/yqndexgo_1719178910696.jpg
+
     await models.photos.create({
         name: fileName,
-        url: process.env.SITEURL + "/img/" + fileName,
+        url: process.env.SITEURL + "img/" + fileName,
         active: false,
         photogroupId: groupId
     });

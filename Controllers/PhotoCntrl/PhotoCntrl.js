@@ -75,7 +75,7 @@ async function getConfirmed() {
         where:
             {
                 active: true,
-                rejected: false
+                //rejected: false
             },
         attributes: ['name', 'url']
     });

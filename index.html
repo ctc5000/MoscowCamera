@@ -106,9 +106,10 @@
 
     function sendSnapshotToServer(snapshot) {
         let formData = new FormData();
-        formData.append('snapshot', snapshot.src);
+        formData.append('photo', snapshot.src);
+        formData.append('groupId',6);
 
-        fetch('http://195.211.124.213:3001/uploadSnapshot', {
+        fetch('https://msksamapi.ru/api/upload', {
             method: 'POST',
             body: formData
         }).then(function (response) {

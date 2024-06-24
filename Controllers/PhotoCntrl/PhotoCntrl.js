@@ -61,6 +61,8 @@ console.log(groupId);
 async function unconfirmed() {
 
     let PhotoByGroup = await models.photogroup.findAll({
+
+        where:{moderating: false},
         include:
             [{
                 model: models.photos

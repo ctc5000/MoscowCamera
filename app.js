@@ -198,6 +198,12 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.dropuser)
         );
     }
+  if (routeController.ClearPhoto) {
+        app.post(
+            `/api/${routeName}/clearphoto`,
+            makeHandlerAwareOfAsyncErrors(routeController.ClearPhoto)
+        );
+    }
 
 
 //Базовые методы

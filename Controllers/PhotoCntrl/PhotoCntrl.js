@@ -9,9 +9,7 @@ const appSocket = require("../../app");
 // Обработка POST запроса на /uploadSnapshot
 
 
-
-async function CreatePhotoGroup()
-{
+async function CreatePhotoGroup() {
     let timestamp = Date.now();
     let PhotoGroup = await models.photogroup.create({
         name: timestamp,
@@ -22,26 +20,26 @@ async function CreatePhotoGroup()
     return PhotoGroup;
 }
 
-async function uploadPhoto(fileName,groupId) {
+async function uploadPhoto(fileName, groupId) {
 
-   /* let timestamp = Date.now();
-    if (!photodata.snapshot) {
-        return handleError('No snapshot data found', res);
-    }
+    /* let timestamp = Date.now();
+     if (!photodata.snapshot) {
+         return handleError('No snapshot data found', res);
+     }
 
-    //snapshot 1
-    let fileName = `yandexgo_${timestamp}_${uuidv4()}p1.png`;
-    let filePath = path.join('uploads', 'preview', fileName);
-    let base64Data = photodata.snapshot.replace(/^data:image\/png;base64,/, '');
+     //snapshot 1
+     let fileName = `yandexgo_${timestamp}_${uuidv4()}p1.png`;
+     let filePath = path.join('uploads', 'preview', fileName);
+     let base64Data = photodata.snapshot.replace(/^data:image\/png;base64,/, '');
 
-    await fs.writeFile(filePath, base64Data, 'base64', (err) => {
-        if (err) {
-            return err;
-        }
-    });*/
+     await fs.writeFile(filePath, base64Data, 'base64', (err) => {
+         if (err) {
+             return err;
+         }
+     });*/
 
     //http://msksamapi.ru//img/uploads/preview/yqndexgo_1719178910696.jpg
-console.log(groupId);
+    console.log(groupId);
     await models.photos.create({
         name: fileName,
         url: process.env.SITEURL + "img/" + fileName,
@@ -62,7 +60,7 @@ async function unconfirmed() {
 
     let PhotoByGroup = await models.photogroup.findAll({
 
-        where:{moderating: false, rejected: false},
+        where: {moderating: false, rejected: false},
         include:
             [{
                 model: models.photos
@@ -174,6 +172,14 @@ async function acceptPhoto(photoId) {
 }
 
 
+async function GetPhotoFile(fileId) {
+    let fileData = await models.photos.findOne({where: {id: fileId}});
+    const path = require('path');
+    let filePath = path.join('uploads', 'preview', fileData.name);
+    // Проверка, существует ли файл
+    return filePath;
+}
+
 module.exports = {
     uploadPhoto,
     unconfirmed,
@@ -184,4 +190,5 @@ module.exports = {
     rejectGroup,
     deleteGroup,
     CreatePhotoGroup,
+    GetPhotoFile,
 }

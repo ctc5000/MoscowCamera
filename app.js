@@ -233,7 +233,12 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.ClearPhoto)
         );
     }
-
+    if (routeController.GetPhotoFile) {
+        app.get(
+            `/api/${routeName}/photofile`,
+            makeHandlerAwareOfAsyncErrors(routeController.GetPhotoFile)
+        );
+    }
 
 //Базовые методы
     if (routeController.getAll) {

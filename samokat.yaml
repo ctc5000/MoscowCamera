@@ -199,6 +199,22 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/photos/photofile:
+    get:
+      tags:
+        - Пользователь
+      summary: Получить файл фото по айди
+      parameters:
+        - name: photoId
+          in: query
+          schema:
+            type: integer
+          example: '35'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/promocodes/loadpromo:
     get:
       tags:

@@ -36,6 +36,7 @@
     "homepage": "https://github.com/chuckfairy/node-webcam#readme",
     "dependencies": {
         "@sequelize/postgres": "^7.0.0-alpha.41",
+        "axios": "^1.7.2",
         "body-parser": "^1.20.2",
         "csv-parser": "^3.0.0",
         "csv-reader": "^1.0.12",

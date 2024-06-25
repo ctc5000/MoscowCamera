@@ -6,7 +6,7 @@ require('dotenv').config()
 const QRCode = require('qrcode');
 const appSocket = require("../../app");
 const sharp = require('sharp');
-
+const axios = require('axios');
 // Обработка POST запроса на /uploadSnapshot
 
 
@@ -18,6 +18,16 @@ async function CreatePhotoGroup() {
         active: true,
         rejected: false
     });
+
+    const url = 'https://endev.ru/yacall/?sceenable=58b98d26-8748-4062-bfb3-7b7bf82727fe';
+    axios.get(url)
+        .then(response => {
+            console.log('Ответ на GET запрос:', response.data);
+        })
+        .catch(error => {
+            console.error('Произошла ошибка при выполнении GET запроса:', error.message);
+        });
+
     return PhotoGroup;
 }
 

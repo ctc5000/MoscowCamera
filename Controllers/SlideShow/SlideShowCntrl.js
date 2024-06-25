@@ -19,9 +19,27 @@ async function uploadPhoto(fileName) {
     await appSocket.SS(JSON.stringify({status: "new slide uploaded", slide: slide.id}));
     return true;
 }
+async function SetNewSlide(id) {
+
+    let photo = await models.photos.findOne(
+      {
+        where:
+            {
+                id:id
+            }
+    })
+    let slide = await models.slide.create({
+        name: photo.name,
+        url: photo.url,
+        active: true
+    });
+    await appSocket.SS(JSON.stringify({status: "new slide seted", slide: slide.id}));
+    return true;
+}
 
 
 module.exports = {
     uploadPhoto,
+    SetNewSlide,
 
 }

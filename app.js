@@ -27,6 +27,7 @@ const routes = {
     settings: require('./Controllers/Settings/SettingView'),
     promocodes: require('./Controllers/Promocodes/PromoCodesView'),
     users: require('./Controllers/Users/UsersView'),
+    slideshow: require('./Controllers/SlideShow/SlideShowView'),
 
 
 };
@@ -59,7 +60,7 @@ app.post('/api/upload', upload.single('photo'), async function (req, res, next) 
 
 
     let timestamp = Date.now();
-    let  originalName= "yandexgo_"+timestamp+".jpg";
+    let  originalName= "yandex_"+timestamp+".jpg";
     let filename = 'uploads/preview/' +originalName;
 
     console.log(req.file);
@@ -265,6 +266,12 @@ for (const [routeName, routeController] of Object.entries(routes)) {
         app.get(
             `/api/${routeName}/slidefile`,
             makeHandlerAwareOfAsyncErrors(routeController.GetPhotoSlideFile)
+        );
+    }
+    if (routeController.SetNewSlide) {
+        app.post(
+            `/api/${routeName}/setslide`,
+            makeHandlerAwareOfAsyncErrors(routeController.SetNewSlide)
         );
     }
 

@@ -5,6 +5,7 @@ const {v4: uuidv4} = require('uuid');
 require('dotenv').config()
 const QRCode = require('qrcode');
 const appSocket = require("../../app");
+const sharp = require('sharp');
 
 // Обработка POST запроса на /uploadSnapshot
 
@@ -22,23 +23,7 @@ async function CreatePhotoGroup() {
 
 async function uploadPhoto(fileName, groupId) {
 
-    /* let timestamp = Date.now();
-     if (!photodata.snapshot) {
-         return handleError('No snapshot data found', res);
-     }
 
-     //snapshot 1
-     let fileName = `yandexgo_${timestamp}_${uuidv4()}p1.png`;
-     let filePath = path.join('uploads', 'preview', fileName);
-     let base64Data = photodata.snapshot.replace(/^data:image\/png;base64,/, '');
-
-     await fs.writeFile(filePath, base64Data, 'base64', (err) => {
-         if (err) {
-             return err;
-         }
-     });*/
-
-    //http://msksamapi.ru//img/uploads/preview/yqndexgo_1719178910696.jpg
     console.log(groupId);
     await models.photos.create({
         name: fileName,
@@ -109,18 +94,74 @@ async function getBygroup(groupid) {
 }
 
 async function setModeratingGroup(groupid) {
-    try {
-        let group = await models.photogroup.update({moderating: true}, {
+    // try {
+    let group = await models.photogroup.update({moderating: true}, {
+        where:
+            {
+                id: groupid
+            }
+    });
+    let Photos = await models.photos.findAll({where: {photogroupId: groupid}});
+    for (let i = 0; i < Photos.length; i++) {
+        let filePath = path.join('uploads', 'preview', Photos[i].name);
+        const outputImagePath = path.join('uploads', 'preview', "1_result_" + Photos[i].name); // Путь для сохранения результирующего изображения
+
+        const PathsArray = ['uploads/whatermarks/1.png', 'uploads/whatermarks/2.png', 'uploads/whatermarks/3.png', 'uploads/whatermarks/4.png', 'uploads/whatermarks/5.png'];
+        let randomIndex = Math.floor(Math.random() * PathsArray.length);
+        let watermarkImagePath = PathsArray[randomIndex];
+        await sharp(filePath).metadata()
+            .then(baseMetadata => {
+                // Загрузка наложенного изображения и масштабирование к размеру основного
+                sharp(watermarkImagePath)
+                    .resize({
+                        width: baseMetadata.width,
+                        height: baseMetadata.height
+                    })
+                    .toBuffer()
+                    .then(overlayBuffer => {
+                        // Наложение наложенного изображения на основное
+                        sharp(filePath)
+                            .composite([{
+                                input: overlayBuffer,
+                                gravity: sharp.gravity.center // позиционирование по центру
+                            }])
+                            .toFile(outputImagePath)
+                            .then(() => {
+                                console.log('Изображения успешно наложены.');
+
+                            })
+                            .catch(err => {
+                                console.error('Ошибка при наложении изображений:', err);
+                            });
+                    })
+                    .catch(err => {
+                        console.error('Ошибка при масштабировании наложенного изображения:', err);
+                    });
+            })
+            .catch(err => {
+                console.error('Ошибка при загрузке основного изображения:', err);
+            });
+
+
+
+
+        await models.photos.update({
+            name: "1_result_" + Photos[i].name,
+            url: process.env.SITEURL + "img/" + "1_result_" + Photos[i].name,
+        },{
             where:
                 {
-                    id: groupid
+                    id:Photos[i].id
                 }
-        });
-        await appSocket.SS(JSON.stringify({status: "group comfirmed", group: groupid}));
-        return group;
-    } catch (e) {
-        return false
+        })
     }
+
+
+    await appSocket.SS(JSON.stringify({status: "group comfirmed", group: groupid}));
+    return group;
+    /* } catch (e) {
+         return false
+     }*/
 
 }
 
@@ -176,28 +217,12 @@ async function GetPhotoFile(fileId) {
     let fileData = await models.photos.findOne({where: {id: fileId}});
     const path = require('path');
     let filePath = path.join('uploads', 'preview', fileData.name);
-    /*
-        const fs = require('fs');
-        const sharp = require('sharp');
+    const outputImagePath = path.join('uploads', 'preview', "new_" + fileData.name); // Путь для сохранения результирующего изображения
 
-        const inputImagePath = 'path/to/input/image.jpg'; // Путь к исходному изображению
-        const watermarkImagePath = 'uploads/whatermark.png'; // Путь к водяному знаку
-        const outputImagePath = path.join('uploads', 'preview', "new_"+fileData.name); // Путь для сохранения результирующего изображения
-
-
-        sharp(filePath)
-            .composite([{ input: watermarkImagePath , fit: 'stretch'}])
-            .sharpen()
-            .toFile(outputImagePath, (err, info) => {
-                if (err) {
-                    console.error(err);
-                } else {
-                    console.log('Изображение успешно обработано и сохранено.');
-                }
-            });*/
 
     return filePath;
 }
+
 async function GetPhotoSlideFile(fileId) {
     let fileData = await models.slide.findOne({where: {id: fileId}});
     const path = require('path');

@@ -261,10 +261,10 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.GetPhotoFile)
         );
     }
-    if (routeController.GetPhotoFile) {
+    if (routeController.GetPhotoSlideFile) {
         app.get(
             `/api/${routeName}/slidefile`,
-            makeHandlerAwareOfAsyncErrors(routeController.GetPhotoFile)
+            makeHandlerAwareOfAsyncErrors(routeController.GetPhotoSlideFile)
         );
     }
 

@@ -176,7 +176,26 @@ async function GetPhotoFile(fileId) {
     let fileData = await models.photos.findOne({where: {id: fileId}});
     const path = require('path');
     let filePath = path.join('uploads', 'preview', fileData.name);
-    // Проверка, существует ли файл
+    /*
+        const fs = require('fs');
+        const sharp = require('sharp');
+
+        const inputImagePath = 'path/to/input/image.jpg'; // Путь к исходному изображению
+        const watermarkImagePath = 'uploads/whatermark.png'; // Путь к водяному знаку
+        const outputImagePath = path.join('uploads', 'preview', "new_"+fileData.name); // Путь для сохранения результирующего изображения
+
+
+        sharp(filePath)
+            .composite([{ input: watermarkImagePath , fit: 'stretch'}])
+            .sharpen()
+            .toFile(outputImagePath, (err, info) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log('Изображение успешно обработано и сохранено.');
+                }
+            });*/
+
     return filePath;
 }
 async function GetPhotoSlideFile(fileId) {

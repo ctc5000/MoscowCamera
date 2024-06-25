@@ -215,6 +215,41 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/callfile:
+    post:
+      tags:
+        - Пользователь
+      summary: Получить урл файла
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/photos/slidefile:
+    get:
+      tags:
+        - Пользователь
+      summary: Получить файл слайдера по id
+      parameters:
+        - name: photoId
+          in: query
+          schema:
+            type: integer
+          example: '35'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/promocodes/loadpromo:
     get:
       tags:

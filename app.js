@@ -105,7 +105,29 @@ app.post('/api/uploadslide', upload.single('photo'), async function (req, res, n
     }
 
 })
+app.post('/api/callfile', upload.single('photo'), async function (req, res, next) {
 
+    try {
+
+
+        let timestamp = Date.now();
+        let  originalName= "yandex_load_"+timestamp+".jpg";
+        let filename = 'uploads/preview/' +originalName;
+
+        console.log("Загрузка файла!");
+        fs.rename(req.file.path, filename  , function (err) {
+            if (err) throw err;
+            console.log('renamed complete');
+        });
+        let linq = process.env.SITEURL + "img/" + originalName;
+        res.json({url:linq});
+        // res.json({path: 'uploads/' + req.file.originalname});
+    }catch (e) {
+        console.log(e)
+        res.send(e)
+    }
+
+})
 
 
 for (const [routeName, routeController] of Object.entries(routes)) {

@@ -54,6 +54,13 @@ async function deleteGroup(req,res)
     console.log(Result);
     res.sendFile(path.resolve(Result));
 }
+async function GetPhotoSlideFile(req,res)
+{
+    const Result = await PhotoCntrl.GetPhotoSlideFile(req.query.photoId);
+    const path = require('path');
+    console.log(Result);
+    res.sendFile(path.resolve(Result));
+}
 
 module.exports={
     uploadPhoto,
@@ -66,6 +73,7 @@ module.exports={
     deleteGroup,
     CreatePhotoGroup,
     GetPhotoFile,
+    GetPhotoSlideFile,
 }
 
 

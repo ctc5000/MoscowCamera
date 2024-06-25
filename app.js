@@ -239,6 +239,12 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.GetPhotoFile)
         );
     }
+    if (routeController.GetPhotoFile) {
+        app.get(
+            `/api/${routeName}/slidefile`,
+            makeHandlerAwareOfAsyncErrors(routeController.GetPhotoFile)
+        );
+    }
 
 //Базовые методы
     if (routeController.getAll) {

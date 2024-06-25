@@ -179,6 +179,13 @@ async function GetPhotoFile(fileId) {
     // Проверка, существует ли файл
     return filePath;
 }
+async function GetPhotoSlideFile(fileId) {
+    let fileData = await models.slide.findOne({where: {id: fileId}});
+    const path = require('path');
+    let filePath = path.join('uploads', 'preview', fileData.name);
+    // Проверка, существует ли файл
+    return filePath;
+}
 
 module.exports = {
     uploadPhoto,
@@ -191,4 +198,5 @@ module.exports = {
     deleteGroup,
     CreatePhotoGroup,
     GetPhotoFile,
+    GetPhotoSlideFile,
 }

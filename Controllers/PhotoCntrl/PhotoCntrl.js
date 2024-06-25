@@ -73,11 +73,10 @@ async function unconfirmed() {
 
 async function getConfirmed() {
 
-    let photos = await models.photos.findAll({
+    let photos = await models.slide.findAll({
         where:
             {
                 active: true,
-                //rejected: false
             },
         attributes: ['name', 'url']
     });

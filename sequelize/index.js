@@ -19,6 +19,7 @@ const modelDefiners = [
     require('../Models/PromoCodes/PromoCodes.model'),
     require('../Models/PromoCodes/PromoCodesMsk.model'),
     require('../Models/Users/users.model'),
+    require('../Models/SlideShow/SlideSHow.model'),
 
 
 

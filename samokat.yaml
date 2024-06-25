@@ -180,6 +180,25 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/uploadslide:
+    post:
+      tags:
+        - Пользователь
+      summary: Загрузить в слайдшоу
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/promocodes/loadpromo:
     get:
       tags:

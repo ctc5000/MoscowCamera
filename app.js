@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 const WebSocket = require('ws');
 const  PhotoCntrl = require ("./Controllers/PhotoCntrl/PhotoCntrl")
+const  SlideCntrl = require ("./Controllers/SlideShow/SlideShowCntrl")
 
 const routes = {
     //SALE_LOGIC
@@ -77,6 +78,33 @@ app.post('/api/upload', upload.single('photo'), async function (req, res, next) 
   }
 
 })
+
+app.post('/api/uploadslide', upload.single('photo'), async function (req, res, next) {
+
+    try {
+
+
+        let timestamp = Date.now();
+        let  originalName= "yandex_slide_"+timestamp+".jpg";
+        let filename = 'uploads/preview/' +originalName;
+
+        console.log(req.file);
+
+        fs.rename(req.file.path, filename  , function (err) {
+            if (err) throw err;
+            console.log('renamed complete');
+        });
+        console.log("Upload slide complite");
+        let data = await SlideCntrl.uploadPhoto(originalName,req.body.groupId);
+        res.send(data);
+        // res.json({path: 'uploads/' + req.file.originalname});
+    }catch (e) {
+        console.log(e)
+        res.send(e)
+    }
+
+})
+
 
 
 for (const [routeName, routeController] of Object.entries(routes)) {

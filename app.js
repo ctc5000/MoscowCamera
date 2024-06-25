@@ -96,7 +96,7 @@ app.post('/api/uploadslide', upload.single('photo'), async function (req, res, n
             console.log('renamed complete');
         });
         console.log("Upload slide complite");
-        let data = await SlideCntrl.uploadPhoto(originalName,req.body.groupId);
+        let data = await SlideCntrl.uploadPhoto(originalName);
         res.send(data);
         // res.json({path: 'uploads/' + req.file.originalname});
     }catch (e) {

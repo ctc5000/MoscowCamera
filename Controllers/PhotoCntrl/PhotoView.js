@@ -49,10 +49,19 @@ async function deleteGroup(req,res)
     res.json(Result);
 }async function GetPhotoFile(req,res)
 {
+    const fs = require('fs');
     const Result = await PhotoCntrl.GetPhotoFile(req.query.photoId);
     const path = require('path');
     console.log(Result);
-    res.sendFile(path.resolve(Result));
+    // Отправка файла с заголовками
+    res.download(Result, "yadnexGo.jpg", (err) => {
+        if (err) {
+            console.error('Ошибка при скачивании файла:', err);
+            res.status(err.status).end();
+        } else {
+            console.log('Файл успешно скачан');
+        }
+    });
 }
 async function GetPhotoSlideFile(req,res)
 {

@@ -58,7 +58,7 @@ app.post('/api/upload', upload.single('photo'), async function (req, res, next) 
 
 
     let timestamp = Date.now();
-    let  originalName= "yqndexgo_"+timestamp+".jpg";
+    let  originalName= "yandexgo_"+timestamp+".jpg";
     let filename = 'uploads/preview/' +originalName;
 
     console.log(req.file);

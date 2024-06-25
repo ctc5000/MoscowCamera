@@ -88,6 +88,7 @@ app.post('/api/uploadslide', upload.single('photo'), async function (req, res, n
         let  originalName= "yandex_slide_"+timestamp+".jpg";
         let filename = 'uploads/preview/' +originalName;
 
+        console.log("Загрузка слайда!");
         console.log(req.file);
 
         fs.rename(req.file.path, filename  , function (err) {

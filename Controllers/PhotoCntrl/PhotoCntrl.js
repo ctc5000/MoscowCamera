@@ -71,7 +71,7 @@ async function getConfirmed() {
             {
                 active: true,
             },
-        attributes: ['name', 'url']
+        attributes: ['name', 'url', 'id']
     });
     return photos;
 }

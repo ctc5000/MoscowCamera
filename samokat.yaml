@@ -102,6 +102,23 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/slideshow/drop:
+    post:
+      tags:
+        - Администратор
+      summary: Удалить слайд
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: 10
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/photos/creategroup:
     post:
       tags:

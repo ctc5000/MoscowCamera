@@ -274,6 +274,12 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.SetNewSlide)
         );
     }
+    if (routeController.DropSlide) {
+        app.post(
+            `/api/${routeName}/drop`,
+            makeHandlerAwareOfAsyncErrors(routeController.DropSlide)
+        );
+    }
 
 //Базовые методы
     if (routeController.getAll) {

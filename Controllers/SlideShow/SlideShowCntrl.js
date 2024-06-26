@@ -37,9 +37,21 @@ async function SetNewSlide(id) {
     return true;
 }
 
+async function DropSlide(id) {
+
+    let photo = await models.slide.destroy(
+        {
+            where:
+                {
+                    id:id
+                }
+        })
+    return true;
+}
 
 module.exports = {
     uploadPhoto,
     SetNewSlide,
+    DropSlide,
 
 }

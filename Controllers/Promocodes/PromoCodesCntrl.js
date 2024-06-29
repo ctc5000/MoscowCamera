@@ -82,7 +82,7 @@ async function GetCsv() {
    const csvData = promos.map(promo => `${promo.id},${promo.value},${promo.activated}`).join('\n');
    fs.writeFileSync('promomsk.csv', csvData);
     console.log('CSV файл успешно создан');
-   let promoSPBs = await models.promocodemsk.findAll({where:{activated:false}});
+   let promoSPBs = await models.promocode.findAll({where:{activated:false}});
    const csvDataSPB = promoSPBs.map(promoSPB => `${promoSPB.id},${promoSPB.value},${promoSPB.activated}`).join('\n');
    fs.writeFileSync('promomskSpb.csv', csvDataSPB);
    console.log('CSV файл успешно создан');

@@ -232,6 +232,13 @@ for (const [routeName, routeController] of Object.entries(routes)) {
             makeHandlerAwareOfAsyncErrors(routeController.getPromoMskById)
         );
     }
+
+    if (routeController.GetCsv) {
+        app.get(
+            `/api/${routeName}/createcsv`,
+            makeHandlerAwareOfAsyncErrors(routeController.GetCsv)
+        );
+    }
     if (routeController.auth) {
         app.post(
             `/api/${routeName}/auth`,

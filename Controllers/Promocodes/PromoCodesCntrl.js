@@ -69,10 +69,23 @@ async function getPromoById(id) {
 }
 async function getPromoMskById(id) {
 
-    let promo = await models.promocodemsk.findOne({
+    let promo = await models.promocode.findOne({
         where: {id: id}
         , attributes: ['id', 'value',]
     });
+
+    return promo;
+}
+async function GetCsv() {
+
+    let promo = await models.promocodemsk.findAll({where:{activated:false}});
+   const csvData = promo.map(user => `${promo.id},${promo.value},${promo.activated}`).join('\n');
+   fs.writeFileSync('promomsk.csv', csvData);
+    console.log('CSV файл успешно создан');
+   let promoSPB = await models.promocodemsk.findAll({where:{activated:false}});
+   const csvDataSPB = promo.map(user => `${promoSPB.id},${promoSPB.value},${promoSPB.activated}`).join('\n');
+   fs.writeFileSync('promomsk.csv', csvDataSPB);
+   console.log('CSV файл успешно создан');
 
     return promo;
 }
@@ -83,5 +96,6 @@ module.exports = {
     getPromoById,
     getPromoMskById,
     grantOneMskCode,
+    GetCsv,
 
 }
